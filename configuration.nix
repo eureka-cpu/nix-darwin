@@ -1,4 +1,4 @@
-{ pkgs, system, rev, ... }:
+{ system, pkgs, lib, rev, ... }:
 {
   environment.systemPackages = with pkgs; [
     helix
@@ -8,8 +8,15 @@
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
 
-  # Necessary for using flakes on this system.
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings = {
+    # Necessary for using flakes on this system.
+    experimental-features = "nix-command flakes";
+    # Necessary for using `linux-builder`.
+    trusted-users = [ "root" "@admin" ];
+  };
+
+  # Use the path to `nixpkgs` in `inputs` as $NIX_PATH
+  nix.nixPath = lib.mkForce [ "nixpkgs=${pkgs.path}" ];
 
   # Linux VM launchd service
   nix.linux-builder.enable = true;

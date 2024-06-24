@@ -13,8 +13,10 @@
     host-name = "yabai";
     system = flake-utils.lib.system.aarch64-darwin;
     pkgs = nixpkgs.legacyPackages.${system};
+    inherit (pkgs) lib;
+
     configuration = import ./configuration.nix {
-      inherit system pkgs;
+      inherit system pkgs lib;
       rev = self.rev or self.dirtyRev or null;
     };
   in
