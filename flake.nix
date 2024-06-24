@@ -1,5 +1,5 @@
 {
-  description = "Example Darwin system flake";
+  description = "eureka-cpu nix-darwin config";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -41,7 +41,7 @@
   in
   {
     # Build darwin flake using:
-    # $ darwin-rebuild build --flake .#simple
+    # $ darwin-rebuild build --flake .
     darwinConfigurations."yabai" = nix-darwin.lib.darwinSystem {
       modules = [ configuration ];
     };
