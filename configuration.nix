@@ -18,6 +18,8 @@
   # Use the path to `nixpkgs` in `inputs` as $NIX_PATH
   nix.nixPath = lib.mkForce [ "nixpkgs=${pkgs.path}" ];
 
+  nix.package = pkgs.nixVersions.nix_2_22;
+
   # Linux VM launchd service
   nix.linux-builder.enable = true;
 
