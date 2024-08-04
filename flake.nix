@@ -6,13 +6,17 @@
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
+    nix-watch = {
+      url = "github:Cloud-Scythe-Labs/nix-watch";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nix-darwin, nixpkgs, flake-utils }:
+  outputs = { self, nix-darwin, nixpkgs, flake-utils, nix-watch }:
   let
     host-name = "yabai";
     system = flake-utils.lib.system.aarch64-darwin;
-    pkgs = nixpkgs.legacyPackages.${system};
+    pkgs = nixpkgs.legacyPackages.${system} // { nixWatchBin = nix-watch.packages.${system}.default; };
     inherit (pkgs) lib;
 
     configuration = import ./configuration.nix {
