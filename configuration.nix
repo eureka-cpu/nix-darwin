@@ -3,7 +3,8 @@
   environment.systemPackages = with pkgs; [
     nixWatchBin
     helix
-    nil
+    kitty
+    kitty-themes
   ];
 
   # Auto upgrade nix package and the daemon service.
