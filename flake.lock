@@ -64,11 +64,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1722770437,
-        "narHash": "sha256-/HvFa6EBZyGN7T2ZcbqgYAYvj8VxLrLgUQMCxJ+5mnA=",
+        "lastModified": 1722827840,
+        "narHash": "sha256-BP2brXZm6+sKx4B2k/o/WSB81WuFgqLwLX7t7KnWlnw=",
         "owner": "Cloud-Scythe-Labs",
         "repo": "nix-watch",
-        "rev": "4c807f528142509a615c92c168957007923b29d4",
+        "rev": "d4bf17ca085e6ed75c41cd6ad3744c1d46e90c90",
         "type": "github"
       },
       "original": {

@@ -1,7 +1,6 @@
 { system, pkgs, lib, rev, ... }:
 {
   environment.systemPackages = with pkgs; [
-    nixWatchBin
     helix
     kitty
     kitty-themes

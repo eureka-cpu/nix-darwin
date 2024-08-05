@@ -16,7 +16,7 @@
   let
     host-name = "yabai";
     system = flake-utils.lib.system.aarch64-darwin;
-    pkgs = nixpkgs.legacyPackages.${system} // { nixWatchBin = nix-watch.packages.${system}.default; };
+    pkgs = nixpkgs.legacyPackages.${system};
     inherit (pkgs) lib;
 
     configuration = import ./configuration.nix {
@@ -33,5 +33,13 @@
 
     # Expose the package set, including overlays, for convenience.
     darwinPackages = self.darwinConfigurations."${host-name}".pkgs;
+
+    devShells.default = pkgs.mkShell {
+      buildInputs = with pkgs; [
+        nil
+        nixpkgs-fmt
+      ] ++ nix-watch.packages.${system}.devTools;
+    };
+    formatter = pkgs.nixpkgs-fmt;
   };
 }
