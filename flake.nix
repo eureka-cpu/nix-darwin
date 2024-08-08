@@ -13,33 +13,40 @@
   };
 
   outputs = { self, nix-darwin, nixpkgs, flake-utils, nix-watch }:
-  let
-    host-name = "yabai";
-    system = flake-utils.lib.system.aarch64-darwin;
-    pkgs = nixpkgs.legacyPackages.${system};
-    inherit (pkgs) lib;
+    with flake-utils.lib;
+    eachSystem
+      (with system; [
+        aarch64-darwin
+        x86_64-darwin
+      ])
+      (system:
+        let
+          host-name = "yabai";
+          pkgs = nixpkgs.legacyPackages.${system};
+          inherit (pkgs) lib;
 
-    configuration = import ./configuration.nix {
-      inherit system pkgs lib;
-      rev = self.rev or self.dirtyRev or null;
-    };
-  in
-  {
-    # Rebuild darwin flake using:
-    # $ darwin-rebuild switch --flake .
-    darwinConfigurations."${host-name}" = nix-darwin.lib.darwinSystem {
-      modules = [ configuration ];
-    };
+          configuration = import ./configuration.nix {
+            inherit system pkgs lib;
+            rev = self.rev or self.dirtyRev or null;
+          };
+        in
+        {
+          # Rebuild darwin flake using:
+          # $ darwin-rebuild switch --flake .
+          darwinConfigurations.${host-name} = nix-darwin.lib.darwinSystem {
+            modules = [ configuration ];
+          };
 
-    # Expose the package set, including overlays, for convenience.
-    darwinPackages = self.darwinConfigurations."${host-name}".pkgs;
+          # Expose the package set, including overlays, for convenience.
+          darwinPackages = self.darwinConfigurations.${host-name}.pkgs;
 
-    devShells.default = pkgs.mkShell {
-      buildInputs = with pkgs; [
-        nil
-        nixpkgs-fmt
-      ] ++ nix-watch.packages.${system}.devTools;
-    };
-    formatter = pkgs.nixpkgs-fmt;
-  };
+          devShells.default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nil
+              nixpkgs-fmt
+            ] ++ nix-watch.nix-watch.${system}.devTools;
+          };
+
+          formatter = pkgs.nixpkgs-fmt;
+        });
 }

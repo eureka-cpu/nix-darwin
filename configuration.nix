@@ -6,33 +6,34 @@
     kitty-themes
   ];
 
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
-
-  nix.settings = {
-    # Necessary for using flakes on this system.
-    experimental-features = "nix-command flakes";
-    # Necessary for using `linux-builder`.
-    trusted-users = [ "root" "@admin" ];
-  };
-
-  # Use the path to `nixpkgs` in `inputs` as $NIX_PATH
-  nix.nixPath = lib.mkForce [ "nixpkgs=${pkgs.path}" ];
-
-  nix.package = pkgs.nixVersions.nix_2_22;
-
-  # Linux VM launchd service
-  nix.linux-builder.enable = true;
-
   # Create /etc/zshrc that loads the nix-darwin environment.
   programs.zsh.enable = true;
 
-  # Set Git commit hash for darwin-version.
-  system.configurationRevision = rev;
+  system = {
+    # Set Git commit hash for darwin-version.
+    configurationRevision = rev;
+    # Used for backwards compatibility, please read the changelog before changing.
+    # $ darwin-rebuild changelog
+    stateVersion = 4;
+  };
+  security.pam.enableSudoTouchIdAuth = true;
 
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
+  nix = {
+    settings = {
+      # Necessary for using flakes on this system.
+      experimental-features = "nix-command flakes";
+      # Necessary for using `linux-builder`.
+      trusted-users = [ "root" "@admin" ];
+    };
+    # Use the path to `nixpkgs` in `inputs` as $NIX_PATH
+    nixPath = lib.mkForce [ "nixpkgs=${pkgs.path}" ];
+    package = pkgs.nixVersions.nix_2_22;
+    # Linux VM launchd service
+    linux-builder.enable = true;
+  };
+
+  # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
