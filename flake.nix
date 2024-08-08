@@ -32,7 +32,7 @@
         in
         {
           # Rebuild darwin flake using:
-          # $ darwin-rebuild switch --flake .
+          # $ darwin-rebuild switch --flake .#${system}.${host-name}
           darwinConfigurations.${host-name} = nix-darwin.lib.darwinSystem {
             modules = [ configuration ];
           };
