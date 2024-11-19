@@ -27,7 +27,7 @@
     };
     # Use the path to `nixpkgs` in `inputs` as $NIX_PATH
     nixPath = lib.mkForce [ "nixpkgs=${pkgs.path}" ];
-    package = pkgs.nixVersions.nix_2_22;
+    package = pkgs.nixVersions.latest;
     # Linux VM launchd service
     linux-builder.enable = true;
   };
@@ -37,5 +37,18 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
+
+  # The default Nix build user ID range has been adjusted for
+  # compatibility with macOS Sequoia 15. Your _nixbld1 user currently has
+  # UID 301 rather than the new default of 351.
+  #
+  # You can automatically migrate the users with the following command:
+  #
+  # curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- repair sequoia --move-existing-users
+  #
+  # If you have no intention of upgrading to macOS Sequoia 15, or already
+  # have a custom UID range that you know is compatible with Sequoia, you
+  # can disable this check by setting:
+  ids.uids.nixbld = 300;
 }
 

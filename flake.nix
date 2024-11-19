@@ -1,10 +1,12 @@
 {
-  description = "eureka-cpu nix-darwin config";
+  description = "eureka-cpu's nix-darwin config";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils.url = "github:numtide/flake-utils";
     nix-watch = {
       url = "github:Cloud-Scythe-Labs/nix-watch";
@@ -29,6 +31,14 @@
             inherit system pkgs lib;
             rev = self.rev or self.dirtyRev or null;
           };
+          todo = 
+            trace ''
+              eureka's todo list:
+                - Add and configure home-manager
+                - Include flake in main dotfiles repo
+                - Add x86_64 linux builder and rosetta for aarch64-darwin system
+                - Enable fingerprint auth
+            '' true;
         in
         {
           # Rebuild darwin flake using:
