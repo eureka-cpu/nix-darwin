@@ -1,6 +1,7 @@
 { system, pkgs, lib, rev, ... }:
 {
   environment.systemPackages = with pkgs; [
+    git
     helix
     kitty
     kitty-themes
