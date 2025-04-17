@@ -23,6 +23,11 @@
     settings = {
       # Necessary for using flakes on this system.
       experimental-features = "nix-command flakes";
+      # Extra artifact caches
+      extra-substituters = [ "https://cloud-scythe-labs.cachix.org" ];
+      extra-trusted-public-keys = [
+        "cloud-scythe-labs.cachix.org-1:I+IM+x2gGlmNjUMZOsyHJpxIzmAi7XhZNmTVijGjsLw="
+      ];
       # Necessary for using `linux-builder`.
       trusted-users = [ "root" "@admin" ];
     };
