@@ -1,5 +1,7 @@
 { system, pkgs, lib, rev, ... }:
 {
+  system.primaryUser = "eureka";
+  
   environment.systemPackages = with pkgs; [
     git
     helix
@@ -61,7 +63,7 @@
     stateVersion = 4;
     defaults.NSGlobalDomain.NSWindowShouldDragOnGesture = true;
   };
-  security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local.touchIdAuth = true;
 
   nix = {
     settings = {
@@ -81,9 +83,6 @@
     # Linux VM launchd service
     linux-builder.enable = true;
   };
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = system;
