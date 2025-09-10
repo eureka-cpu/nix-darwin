@@ -7,6 +7,13 @@
       url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager = {
+      type = "github";
+      owner = "nix-community";
+      repo = "home-manager";
+      ref = "release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-utils.url = "github:numtide/flake-utils";
     nix-watch = {
       url = "github:Cloud-Scythe-Labs/nix-watch";
@@ -14,14 +21,21 @@
     };
   };
 
-  outputs = { self, nix-darwin, nixpkgs, flake-utils, nix-watch }:
-    with flake-utils.lib;
-    eachSystem
-      (with system; [
-        aarch64-darwin
-        x86_64-darwin
-      ])
-      (system:
+  outputs =
+    { self
+    , nix-darwin
+    , home-manager
+    , nixpkgs
+    , flake-utils
+    , nix-watch
+    }:
+      with flake-utils.lib;
+      eachSystem
+        (with system; [
+          aarch64-darwin
+          x86_64-darwin
+        ])
+        (system:
         let
           host-name = "yabai";
           pkgs = nixpkgs.legacyPackages.${system};
@@ -36,7 +50,23 @@
           # Rebuild darwin flake using:
           # $ darwin-rebuild switch --flake .#${system}.${host-name}
           darwinConfigurations.${host-name} = nix-darwin.lib.darwinSystem {
-            modules = [ configuration ];
+            modules = [
+              configuration
+              home-manager.darwinModules.home-manager
+              {
+                users.users.eureka = {
+                  name = "eureka";
+                  home = "/Users/eureka";
+                };
+              }
+              {
+                home-manager = {
+                  users.eureka = ./home-manager;
+                  useUserPackages = true;
+                  useGlobalPkgs = true;
+                };
+              }
+            ];
           };
 
           # Expose the package set, including overlays, for convenience.
