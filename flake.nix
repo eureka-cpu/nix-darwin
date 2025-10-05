@@ -2,23 +2,18 @@
   description = "eureka-cpu's nix-darwin config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-darwin = {
-      url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+      url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       type = "github";
       owner = "nix-community";
       repo = "home-manager";
-      ref = "release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nix-watch = {
-      url = "github:Cloud-Scythe-Labs/nix-watch";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -27,7 +22,6 @@
     , home-manager
     , nixpkgs
     , flake-utils
-    , nix-watch
     }:
       with flake-utils.lib;
       eachSystem
@@ -76,7 +70,7 @@
             buildInputs = with pkgs; [
               nil
               nixpkgs-fmt
-            ] ++ nix-watch.nix-watch.${system}.devTools;
+            ];
           };
 
           formatter = pkgs.nixpkgs-fmt;
